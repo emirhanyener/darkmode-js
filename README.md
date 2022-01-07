@@ -7,7 +7,7 @@ In the website if want the darkmode control panel, only should be added control.
 
 In the website if want the text to be dark and controlled size by script, "TextDarkControl" class should be added to element.
 
-"<p>" tags automatic controlled by script.
+p tags automatic controlled by script.
 
 ## Images;
 
