@@ -1,20 +1,55 @@
 document.body.innerHTML += '<div id="control"></div>';
-var control = document.getElementById("control");
-var darkmode = false;
+let control = document.getElementById("control");
+let darkmode = false;
+
+document.addEventListener('mousemove', pointer_stats);
+control.addEventListener('mousedown', switch_drag);
+
+let is_dragging = false;
+let pointerPosX = 0;
+let pointerPosY = 0;
 
 Init();
 
 function Init(){
-	control.innerHTML='<div id="control-darkmode"><label >Dark Mode<input type="checkbox" onclick="DarkMode()" id="control-darkmode-check"></label></div><br><div id="control-fontsize"><div id="control-fontsize-upper" onclick="FontUpper()">A+</div><div id="control-fontsize-lower" onclick="FontLower()">a-</div></div>     ';
+	control.innerHTML += '<div id="control-darkmode"><label>Dark Mode';
+	control.innerHTML += '<input type="checkbox" onclick="DarkMode()" id="control-darkmode-check">';
+	control.innerHTML += '</label></div><br><div id="control-fontsize">';
+	control.innerHTML += '<div id="control-fontsize-upper" onclick="FontUpper()">A</div>';
+	control.innerHTML += '<div id="control-fontsize-lower" onclick="FontLower()">a</div></div>';
+
 	control.style.position="fixed";
 	control.style.bottom="0px";
 	control.style.right="0px";
 	control.style.background="#fff";
 	control.style.padding="10px";
-	control.style.width="90px";
+	control.style.maxWidth = "90px";
+	control.style.maxHeight = "100px";
 	control.style.border="1px solid gray";
 	control.style.borderRadius="5px";
 	control.style.userSelect="none";
+	control.style.cursor = "grab";
+}
+
+function pointer_stats(e){
+	pointerPosX = e.clientX;
+	pointerPosY = e.clientY;
+	if(is_dragging){
+		control.style.top = pointerPosY - 10;
+		control.style.left = pointerPosX - control.offsetWidth / 2;
+	}
+	//console.log(pointerPosX + " " + pointerPosY);
+}
+
+function switch_drag(){
+	is_dragging = !is_dragging;
+
+	if(!is_dragging){
+		control.style.cursor = "grab";
+	}
+	else{
+		control.style.cursor = "grabbing";
+	}
 }
 
 function FontLower(){
