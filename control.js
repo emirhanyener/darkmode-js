@@ -45,6 +45,10 @@ function switch_drag(){
 	is_dragging = !is_dragging;
 
 	if(!is_dragging){
+		if(window.innerWidth / 2 < pointerPosX)
+			control.style.left = "auto";
+		else
+			control.style.left = "0px";
 		control.style.cursor = "grab";
 	}
 	else{
