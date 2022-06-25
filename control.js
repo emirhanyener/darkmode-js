@@ -1,9 +1,14 @@
-document.body.innerHTML += '<div id="control"></div>';
-let control = document.getElementById("control");
-let darkmode = false;
+document.body.innerHTML += '<div id="darkmode"></div>';
+let darkmode = document.getElementById("darkmode");
+let darkmode_label;
+let is_darkmode = false;
 
 document.addEventListener('mousemove', pointer_stats);
-control.addEventListener('mousedown', switch_drag);
+
+
+var config = {
+	'font_size_control': 2
+};
 
 let is_dragging = false;
 let pointerPosX = 0;
@@ -12,31 +17,34 @@ let pointerPosY = 0;
 Init();
 
 function Init(){
-	control.innerHTML += '<div id="control-darkmode"><label>Dark Mode';
-	control.innerHTML += '<input type="checkbox" onclick="DarkMode()" id="control-darkmode-check">';
-	control.innerHTML += '</label></div><br><div id="control-fontsize">';
-	control.innerHTML += '<div id="control-fontsize-upper" onclick="FontUpper()">A</div>';
-	control.innerHTML += '<div id="control-fontsize-lower" onclick="FontLower()">a</div></div>';
+	darkmode.innerHTML += '<div id="darkmode_label"><label>Dark Mode';
+	darkmode.innerHTML += '<input type="checkbox" onclick="change_dark_mode()">';
+	darkmode.innerHTML += '</label></div><br><div>';
+	darkmode.innerHTML += '<div onclick="change_font_size(\'+\')">A</div>';
+	darkmode.innerHTML += '<div onclick="change_font_size(\'-\')">a</div></div>';
+	darkmode_label = document.getElementById("darkmode_label");
 
-	control.style.position="fixed";
-	control.style.bottom="0px";
-	control.style.right="0px";
-	control.style.background="#fff";
-	control.style.padding="10px";
-	control.style.maxWidth = "90px";
-	control.style.maxHeight = "100px";
-	control.style.border="1px solid gray";
-	control.style.borderRadius="5px";
-	control.style.userSelect="none";
-	control.style.cursor = "grab";
+	darkmode_label.addEventListener('mousedown', switch_drag);
+	darkmode_label.addEventListener('mouseup', switch_drag);
+	darkmode.style.position="fixed";
+	darkmode.style.bottom="0px";
+	darkmode.style.right="0px";
+	darkmode.style.background="#fff";
+	darkmode.style.padding="10px";
+	darkmode.style.maxWidth = "90px";
+	darkmode.style.maxHeight = "100px";
+	darkmode.style.border="1px solid gray";
+	darkmode.style.borderRadius="5px";
+	darkmode.style.userSelect="none";
+	darkmode_label.style.cursor = "grab";
 }
 
 function pointer_stats(e){
 	pointerPosX = e.clientX;
 	pointerPosY = e.clientY;
 	if(is_dragging){
-		control.style.top = pointerPosY - 10;
-		control.style.left = pointerPosX - control.offsetWidth / 2;
+		darkmode.style.top = pointerPosY - 15;
+		darkmode.style.left = pointerPosX - darkmode.offsetWidth / 2;
 	}
 	//console.log(pointerPosX + " " + pointerPosY);
 }
@@ -46,41 +54,27 @@ function switch_drag(){
 
 	if(!is_dragging){
 		if(window.innerWidth / 2 < pointerPosX)
-			control.style.left = "auto";
+			darkmode.style.left = "auto";
 		else
-			control.style.left = "0px";
-		control.style.cursor = "grab";
+			darkmode.style.left = "0px";
+		darkmode_label.style.cursor = "grab";
 	}
 	else{
-		control.style.cursor = "grabbing";
+		darkmode_label.style.cursor = "grabbing";
 	}
 }
 
-function FontLower(){
-	var pArray = document.getElementsByTagName("P");
-	for (i = 0 ; i < pArray.length ; i++){
-		pArray[i].style.fontSize=(parseInt(window.getComputedStyle(pArray[i], null).getPropertyValue('font-size')) - 2) + "px";
-	}
+function change_font_size(size){
 	var tControl = document.getElementsByClassName("TextControl");
-	for (i = 0 ; i < pArray.length ; i++){
-		tControl[i].style.fontSize=(parseInt(window.getComputedStyle(tControl[i], null).getPropertyValue('font-size')) - 2) + "px";
+	for (i = 0 ; i < tControl.length ; i++){
+		tControl[i].style.fontSize=(parseInt(window.getComputedStyle(tControl[i], null).getPropertyValue('font-size')) +(size == '+' ? config.font_size_control : -config.font_size_control)) + "px";
 	}
 }
 
-function FontUpper(){
-	var pArray = document.getElementsByTagName("P");
-	for (i = 0 ; i < pArray.length ; i++){
-		pArray[i].style.fontSize=(parseInt(window.getComputedStyle(pArray[i], null).getPropertyValue('font-size')) + 2) + "px";
-	}
-	var tControl = document.getElementsByClassName("TextControl");
-	for (i = 0 ; i < pArray.length ; i++){
-		tControl[i].style.fontSize=(parseInt(window.getComputedStyle(tControl[i], null).getPropertyValue('font-size')) + 2) + "px";
-	}
-}
-
-function DarkMode(){
-	if(darkmode){
-		var body = document.getElementsByTagName("body")[0];
+function change_dark_mode(){
+	is_darkmode = !is_darkmode;
+	var body = document.getElementsByTagName("body")[0];
+	if(!is_darkmode){
 		body.style.backgroundColor="#fff";
 		body.style.color="#111";
 		
@@ -93,22 +87,17 @@ function DarkMode(){
 		for (i = 0 ; i < selectedTextDark.length ; i++){
 			selectedTextDark[i].style.color="#111";
 		}
-		darkmode=false;
+		return;
 	}
+	body.style.backgroundColor="#222";
+	body.style.color="#fff";
 	
-	else{
-		var body = document.getElementsByTagName("body")[0];
-		body.style.backgroundColor="#222";
-		body.style.color="#fff";
-		
-		var divs = document.getElementsByTagName("DIV");
-		for (i = 0 ; i < divs.length ; i++){
-			divs[i].style.backgroundColor="#333";
-		}
-		var selectedTextDark = document.getElementsByClassName("TextDarkControl");
-		for (i = 0 ; i < selectedTextDark.length ; i++){
-			selectedTextDark[i].style.color="#fff";
-		}
-		darkmode=true;
+	var divs = document.getElementsByTagName("DIV");
+	for (i = 0 ; i < divs.length ; i++){
+		divs[i].style.backgroundColor="#333";
+	}
+	var selectedTextDark = document.getElementsByClassName("TextDarkControl");
+	for (i = 0 ; i < selectedTextDark.length ; i++){
+		selectedTextDark[i].style.color="#fff";
 	}
 }
