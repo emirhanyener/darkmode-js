@@ -49,8 +49,8 @@ function pointer_stats(e){
 	pointer_position_x = e.clientX;
 	pointer_position_y = e.clientY;
 	if(is_dragging){
-		darkmode.style.top = pointer_position_y - 15;
-		darkmode.style.left = pointer_position_x - darkmode.offsetWidth / 2;
+		darkmode.style.top = pointer_position_y - 15 + "px";
+		darkmode.style.left = pointer_position_x - darkmode.offsetWidth / 2 + "px";
 	}
 }
 
